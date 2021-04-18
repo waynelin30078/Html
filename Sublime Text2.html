@@ -66,10 +66,9 @@
            var files = e.dataTransfer.files;
            if(files.length==0)
            {
-               return files;
+               return false;
            }
-           convert(files[0]);
-            
+           convert(files[0]); 
         }
     </script>
 
@@ -77,11 +76,10 @@
     <body>
         <div id="myDiv">Come here.</div>
         <br>
-        <textarea id="myTestarea"cols="50" rows="10"> </textarea>
+        <textarea id="myTextarea"cols="50" rows="10"> </textarea>
         <script>
             var myDiv=document.getElementById("myDiv")
-            var myTestarea=document.getElementById("myTestarea")
+            var myTextarea=document.getElementById("myTextarea")
         </script>
     </body>
     </html>
-
