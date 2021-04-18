@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset = "utf-8">
+    <title>Converter</title>
+    <style>
+        div{
+            width: 300px;
+            height: 100px;
+            padding: 10px; 
+            background-color: blue;
+            color: white; 
+            font-size: 24px;
+        }
+    </style>
+    <script>
+        window.onload=function()
+        {
+            myDiv.addEventListener("dragenter",dragenterHandler);
+            myDiv.addEventListener("dragleave",dragleaveHandler);
+            myDiv.addEventListener("dragover",dragoverHandler);
+            myDiv.addEventListener("drop",dropHandler);
+        };
+        function dragenterHandler(e)
+        {
+            myDiv.style.background="red";
+            myDiv.innerHTML="Drop it";
+
+        }
+        function dragleaveHandler(e)
+        {
+            myDiv.style.background="blue";
+            myDiv.innerHTML="Come here.";
+            
+        }
+        function dragoverHandler(e)
+        {
+           e.preventDefault();
+            
+        }
+            function convert(file)
+            {
+                if(!file.type.match(/text.*/))
+                {
+                    alert("Not text file!!");
+                    return false;
+                }
+                var reader=new FileReader();
+                reader.onloadend=function()
+                {
+                    var s=reader.result;
+                    s=s.replace(/Wayne/g,"緯恩");
+                    s=s.replace(/John/g,"約翰");
+                    s=s.replace(/David/g,"大衛");
+                    myTextarea.innerHTML=
+                    "原文： \n"+
+                    reader.result+
+                    "\n---\n翻譯：\n"+
+                    s;
+                };
+                reader.readAsText(file);
+            }
+        function dropHandler(e)
+        {
+           e.preventDefault();
+           var files = e.dataTransfer.files;
+           if(files.length==0)
+           {
+               return files;
+           }
+           convert(files[0]);
+            
+        }
+    </script>
+
+    </head>
+    <body>
+        <div id="myDiv">Come here.</div>
+        <br>
+        <textarea id="myTestarea"cols="50" rows="10"> </textarea>
+        <script>
+            var myDiv=document.getElementById("myDiv")
+            var myTestarea=document.getElementById("myTestarea")
+        </script>
+    </body>
+    </html>
+
