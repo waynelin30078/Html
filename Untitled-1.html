@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+        <head>
+                <meta charset="utf-8">
+                <title>video</title>
+                <script>
+                    function updateProgress()
+                    {
+                        timeDisplay.innerHTML=Math.floor(myVideo.currentTime)+"/"+Math.floor(myVideo.duration);
+                        progressSlider.value=myVideo.currentTime;
+                    }
+                    function PlayOrPause()
+                    {
+                            //顯示網址
+                            videoURL.value=myVideo.src;
+                            if(myVideo.paused)
+                            {
+                            myVideo.play();
+                            playButton.value="Pause";
+                            }else
+                            {
+                                myVideo.pause();
+                                playButton.value="Play"
+                            }
+                            progressSlider.max=myVideo.duration;//最大值為影片的長度
+
+                            volumeDisplay.innerHTML="音量"+myVideo.volume.toFixed(2);//顯示音量
+
+                            myVideo.addEventListener("timeupdate",updateProgress);
+                        
+                        }
+                    function FullScreen()
+                    {
+                        myVideo.webkitEnterFullScreen();
+                    }
+                    function addVoulme()
+                    {
+                        if(myVideo.volume==1)
+                        {
+
+                        }else if(myVideo.volume>0.9)
+                        {myVideo.volume=1;
+                        }else{ 
+                            myVideo.volume+=0.1;   
+                        }
+                        volumeDisplay.innerHTML="音量"+myVideo.volume.toFixed(2);//顯示音量
+                    }
+                    function subVoulme()
+                    {
+                        if(myVideo.volume==0)
+                        {
+
+                        }else if(myVideo.volume<0.1)
+                        {myVideo.volume=0;
+                        }else{ 
+                            myVideo.volume-=0.1;   
+                        }
+                        volumeDisplay.innerHTML="音量"+myVideo.volume.toFixed(2);//顯示音量
+                    }
+                </script>
+        </head>
+        <body>
+            <video id ="myVideo" width="320" height="240"
+            src="saq.mp4"></video>
+            <br>
+            <input id=  "videoURL"type ="text" size="70"/>
+            <br>
+            <input onclick="PlayOrPause()" id="playButton"type="button" value="Play"/>
+            <input onclick="FullScreen()"type="button" value="FullScreen"/>
+            <div>
+               <span id="timeDisplay"></span>
+               <span id="volumeDisplay"></span>
+            </div>
+            <div>
+                <input onclick ="addVoulme()"type="button" value="+"/>
+                <input onclick ="subVoulme()"type="button" value="-"/>
+            </div>
+            <input id="progressSlider"type="range" min="0" value="0" />
+        <script>
+            var myVideo= document.getElementById("myVideo");
+            var videoURL=document.getElementById("videoURL");
+            var playButton=document.getElementById("playButton");
+            var timeDisplay=document.getElementById("timeDisplay");
+            var volumeDisplay=document.getElementById("volumeDisplay");
+            var progressSlider=document.getElementById("progressSlider");
+        </script>
+        </body>
+</html>
