@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=320,user-scalable=no"/>
+        <meta charset = "utf-8">
+        <title>Canvas Painter</title>
+        <style>
+            *{
+                margin:0;
+            }
+            div{
+                width: 320px;
+                height: 20px;
+                font-size: 15px;
+                padding: 4px;
+                background-color: black;
+                color: white;
+                text-align: center;
+            }
+            canvas{
+                width: 320px;
+                height: 400px;
+                background-color: lightgray;
+            }
+            input{
+                width: 100px;
+                height: 25px;
+                background-color: yellow;
+                text-align: center;
+                font: size 15px;
+            }
+        </style>
+        <script>
+            var oldX,oldY;
+            var canvas,con,canvas_top=20;
+            var colors=["black","red","blue"]
+            var color_index=0;
+
+            function $(id)
+            {
+                return document.getElementById(id);
+            }
+            function drawLine(event,isStart)
+            {
+                var t=event.touches[0];
+                var mx=t.pageX
+                var my=t.pageY-canvas_top;
+                if(isStart)
+                {
+                    oldX=mx-1;
+                    oldY=my-1;
+                }
+                con.beginPath();
+                con.moveTo(oldX,oldY);
+                con.lineTo(mx,my);
+                con.stroke();
+                oldX=mx;
+                oldY=my;
+            }
+            
+            window.onload=function()
+            {
+                canvas=$("myCanvas");
+                con=canvas.getContext("2d");
+                con.strokeStyle="black";
+                con.lineWidth=2;
+
+                canvas.ontouchstart=function(e){drawLine(e,true);};
+                canvas.ontouchmove=function(e){drawLine(e,false);};
+                canvas.ontouchend=function(e){drawLine(e,false);};
+
+                $("myDiv").onclick=function()
+                {
+                    var cur=colors[(++color_index)%colors.length];
+                    $("myDiv").style.backgroundColor=cur;
+                    con.strokeStyle=cur;
+
+                };
+                $("clearButton").onclick=function()
+                {
+                    con.clearRect(0,0,320,400);
+                };
+
+            };
+
+        </script>
+    </head>
+    <body>
+        <div id="myDiv">Canvas Painter</div>
+        <canvas id="myCanvas" width="320" height="400"></canvas>
+        <input id="clearButton" type="button" value="Clear"/>
+    </body>
+    </html>
