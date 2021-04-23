@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<meta charset = "utf-8">
+    	<title>Canvas Puzzle</title>
+        <style>
+            *{
+                margin: 0;
+                padding: 0;
+                position:absolute;
+            }
+            #title{
+                background-color: blue;
+                color:white;
+                padding: 3px;
+                font-size: 14px;
+                width: 314px;
+                height: 14px;
+
+            }
+            #myCanvas{
+                top: 20px;
+                width: 320px;
+                height: 320px;
+            }
+        </style>
+
+    </head>
+    <body>
+       <div id="title">15 Puzzle</div>
+       <canvas id="myCanvas" width="320" height="320"></canvas>
+       <script>
+           var main_image="123.PNG";//檔名
+           var panels=[];
+           var cell_w=320/4;
+           var cell_h=320/4;
+           var pos_array=[[-1,0],[1,0],[0,-1],[0,1]];
+
+           var canvas=document.getElementById("myCanvas");
+           var con=canvas.getContext("2d");
+
+           var image=new Image();
+           image.src=main_image;
+           image.onload=function()
+           {
+               con.drawImage(image,0,0,320,320);
+               setTimeout(shufflePanel,3000);
+           };
+           function shufflePanel()
+           {
+               for(var i=0 ;i<16;i++)
+               {
+                   panels[i]=i;
+               }
+               for(var j=0;j<16;j++)
+               {
+                   var r=Math.floor(Math.random()*16);
+                   //r:0~15
+                   var tmp=panels[r];
+                   panels[r]=panels[j];
+                   panels[j]=tmp;
+               }
+               drawPanels();
+           }
+           function drawPanels()
+               {
+                   for(var i=0;i<16;i++)
+                   {
+                        var no=panels[i];
+                        var px=no%4*cell_w;
+                        var py=Math.floor(no/4)*cell_h;
+
+                        var tx=(i%4)*cell_w;
+                        var ty=Math.floor(i/4)*cell_h;
+                        if(no==15)
+                        {
+                            con.beginPath();
+                            con.fillStyle="black";
+                            con.fillRect(tx,ty,cell_w,cell_h);
+                        }else{
+                            con.drawImage(image,px,py,cell_w,cell_h,
+                                                tx,ty,cell_w,cell_h)
+                        }
+                        con.beginPath();
+                        con.moveTo(tx+cell_w,ty);
+                        con.lineTo(tx+cell_w,ty+cell_h);
+                        con.lineTo(tx,ty+cell_h);
+                        con.strokeStyle="#99999";
+                        con.stroke();
+                   }
+
+               }//
+           canvas.ontouchstart=function(e)
+           {
+                if(e.touches.length>0)
+                {
+                    var t=e.touches[0];
+                    checkPanelXY(t.clientX,t.clientY);
+                }
+                e.preventDefault();
+
+           };
+           canvas.onmousedown=function(e)
+           {
+                    checkPanelXY(e.clientX,e.clientY);         
+           };
+           function checkPanelXY(sx,sy)
+           {
+               var col=Math.floor(sx/cell_w);
+               var row=Math.floor((sy-20)/cell_h);
+               var no=col+row*4;
+               if(panels[no]==15)
+               {
+                   return;
+               }
+               for(var i=0;i<pos_array.length;i++)
+               {
+                   var row2=pos_array[i][0]+row;
+                   var col2=pos_array[i][1]+col;
+                   var check=getPanelNo(row2,col2);
+
+                   if(check==15)
+                   {
+                       swapPanel(row,col,row2,col2);
+                   }
+               }
+
+
+
+
+           }
+           function getPanelNo(row,col)
+           {
+               if(col<0||row<0||col>=4||row>=4)
+               {
+                   return-1;
+               }
+               return panels[col+row*4];
+           }
+          function swapPanel(row1,col1,row2,col2)
+          {
+              var index1=row1*4+col1;
+              var index2=row2*4+col2;
+              var tmp=panels[index1];
+              panels[index1]=panels[index2];
+              panels[index2]=tmp;
+
+              drawPanels();
+
+          }
+       </script>
+    </body>
+</html>
